@@ -7,7 +7,7 @@ install:
     - pip install -r requirements.txt
 
 script:
-    - pyflake8 amsite
+    - flake8 amsite
 
 sudo: false
 
