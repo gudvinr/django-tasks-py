@@ -53,9 +53,9 @@ ROOT_URLCONF = 'amsite.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': 'templates',
+        # 'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -77,6 +77,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'data.db'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'test_data.db')
+        }
     }
 }
 
