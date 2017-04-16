@@ -5,9 +5,11 @@ python:
 
 install:
     - pip install -r requirements.txt
+    - npm install package.json
 
 script:
     - flake8 amsite
+    - python manage.py test
 
 sudo: false
 

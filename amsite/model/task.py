@@ -8,7 +8,7 @@ from .roadmap import Roadmap
 from .state import State
 
 
-class Task(UUIDModel):
+class Task(UUIDModel, models.Model):
     ''' This class provides model for Task
 
     Params:
@@ -19,10 +19,10 @@ class Task(UUIDModel):
     `title: estimate (remaining)`
     '''
 
-    title = models.CharField()
-    state = models.CharField(default=State.in_progress.value)
+    title = models.CharField(max_length=256)
+    state = models.CharField(max_length=32, default=State.in_progress.value)
     estimate = models.DateField()
-    created = models.DateField(default=date.today(), editable=False)
+    created = models.DateField(default=date.today, editable=False)
 
     roadmap = models.ForeignKey(Roadmap, on_delete=models.CASCADE)
 

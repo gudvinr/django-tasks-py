@@ -5,7 +5,7 @@ from .uuid_model import UUIDModel
 from .task import Task
 
 
-class Scores(UUIDModel):
+class Scores(UUIDModel, models.Model):
 
     date = models.DateField()
     points = models.IntegerField()

@@ -1,4 +1,6 @@
-Django~=1.10.6
+Django~=1.11
+Jinja2~=2.9.6
 flake8~=3.3.0
-naming~=0.0.1
-pep8~=1.7.0
+flake8-mypy~=17.3.3
+pep8-naming~=0.4.1
+PyYAML~=3.12
