@@ -1,0 +1,33 @@
+{% extends "_template.html" %}
+{% block title %} Task: {{ title if len(title) < 64 else title[:63].rstrip() + '…' }} {% endblock %}
+
+{% block navbar %}
+<div class="col s12">
+    <a href="{{ url('roadmaps') }}" class="breadcrumb">Roadmaps</a>
+    <a href="{{ url('roadmap', args=[roadmap.id]) }}" class="breadcrumb">{{ roadmap.title }}</a>
+    <a href="{{ url('task', args=[roadmap.id, id]) }}" class="breadcrumb">{{ title }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form action="#" class="col s12">
+            <div class="input-field">
+                <input placeholder="Title" id="title" type="text" value="{{ title }}">
+                <label for="title">Title</label>
+            </div>
+            <input type="date" class="datepicker" data-value="{{ estimate }}">
+            <button class="btn waves-effect waves-light deep-orange accent-2 right" type="submit" name="action">Edit</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $('.datepicker').pickadate({
+        min: new Date(),
+        formatSubmit: 'dd.mm.yyyy'
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "_template.html" %}
+{% block title %} Roadmap: {{ title }} {% endblock %}
+
+{% block navbar %}
+<div class="col s12">
+    <a href="{{ url('roadmaps') }}" class="breadcrumb">Roadmaps</a>
+    <a href="{{ url('roadmap', args=[id]) }}" class="breadcrumb">{{ title }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form action="#" class="col s12">
+            <div class="input-field">
+                <input placeholder="Title" id="title" type="text">
+                <label for="title">Title</label>
+            </div>
+            <input type="date" class="datepicker">
+            <button class="btn waves-effect waves-light deep-orange accent-2 right" type="submit" name="action">Add task</button>
+        </form>
+    </div>
+    {% for t in tasks %}
+    <div class="collection">
+        <a href="{{ url('task', args=[id, t.id]) }}" class="collection-item light-blue-text text-darken-4">{{ t.title }}</a>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    $('.datepicker').pickadate({
+        min: new Date(),
+        formatSubmit: 'dd.mm.yyyy'
+    })
+</script>
+{% endblock %}
