@@ -1,14 +1,14 @@
 # from typing import Union
 
+import uuid
 from datetime import timedelta, date
 from django.db import models
 
-from .uuid_model import UUIDModel
 from .roadmap import Roadmap
 from .state import State
 
 
-class Task(UUIDModel, models.Model):
+class Task(models.Model):
     ''' This class provides model for Task
 
     Params:
@@ -18,6 +18,8 @@ class Task(UUIDModel, models.Model):
     Representation:
     `title: estimate (remaining)`
     '''
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=256)
     state = models.CharField(max_length=32, default=State.in_progress.value)

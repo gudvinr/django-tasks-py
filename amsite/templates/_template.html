@@ -41,7 +41,25 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
     {% endif %}
+    <script type="text/javascript" src="/static/js/app.js"></script>
     {% endblock %}
 </body>
 
 </html>
+
+{# Useful macros #}
+{% macro insert_pickadate() -%}
+<script>
+    $('.datepicker').pickadate({
+        min: new Date(),
+        formatSubmit: 'yyyy-mm-dd',
+        hiddenName: true,
+        onSet: function( arg ) {
+            if ( 'select' in arg || 'clear' in arg ) {
+                checkInput();
+                this.close();
+            }
+        }
+    })
+</script>
+{%- endmacro %}

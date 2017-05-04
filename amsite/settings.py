@@ -57,6 +57,20 @@ TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templa
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [TEMPLATES_DIR],
+        # 'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'amsite.jinja2.environment',
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
         'OPTIONS': {
@@ -67,21 +81,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
-    {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [TEMPLATES_DIR],
-        # 'APP_DIRS': True,
-        'OPTIONS': {
-            'environment': 'amsite.jinja2.Environment',
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'amsite.wsgi.application'

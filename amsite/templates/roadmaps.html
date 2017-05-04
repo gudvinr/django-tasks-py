@@ -3,17 +3,18 @@
 
 {% block content %}
     <div class="row">
-        <form action="#" class="col s12">
+        <form action="{{ url('roadmaps') }}" method="POST" class="col s12">
+            {{ csrf_input }}
             <div class="input-field">
-                <input placeholder="Title" id="title" type="text">
+                <input placeholder="Title" id="title" name="title" type="text" required>
                 <label for="title">Title</label>
             </div>
-            <button class="btn waves-effect waves-light deep-orange accent-2 right" type="submit" name="action">New roadmap</button>
+            <button id="submit_btn" class="btn waves-effect waves-light deep-orange accent-2 right disabled" type="submit">New roadmap</button>
         </form>
     </div>
-    {% for r in roadmaps %}
     <div class="collection">
+    {% for r in roadmaps %}
         <a href="{{ url('roadmap', args=[r.id]) }}" class="collection-item light-blue-text text-darken-4">{{ r.title }}</a>
-    </div>
     {% endfor %}
+    </div>
 {% endblock %}

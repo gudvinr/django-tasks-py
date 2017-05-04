@@ -1,3 +1,4 @@
+{% from "_template.html" import insert_pickadate %}
 {% extends "_template.html" %}
 {% block title %} Task: {{ title if len(title) < 64 else title[:63].rstrip() + '…' }} {% endblock %}
 
@@ -11,23 +12,30 @@
 
 {% block content %}
     <div class="row">
-        <form action="#" class="col s12">
+        <form action="{{ url('task', args=[roadmap.id, id]) }}" method="POST" class="col s12">
+            {{ csrf_input }}
             <div class="input-field">
-                <input placeholder="Title" id="title" type="text" value="{{ title }}">
+                <input placeholder="Title" id="title" name="title" type="text" value="{{ title }}"
+                {% if ready %} disabled {% endif %}>
                 <label for="title">Title</label>
             </div>
-            <input type="date" class="datepicker" data-value="{{ estimate }}">
-            <button class="btn waves-effect waves-light deep-orange accent-2 right" type="submit" name="action">Edit</button>
+            <input type="date" name="estimate" class="datepicker" data-value="{{ estimate }}"
+            {% if ready %} disabled {% endif %}>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" name="ready"
+                    {% if ready %}checked disabled {% endif %}>
+                    <span class="lever"></span>
+                    Ready
+                </label>
+            </div>
+            <button id="submit_btn" class="btn waves-effect waves-light deep-orange accent-2 right disabled" type="submit"
+            {% if ready %} disabled {% endif %}>Edit</button>
         </form>
     </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script>
-    $('.datepicker').pickadate({
-        min: new Date(),
-        formatSubmit: 'dd.mm.yyyy'
-    })
-</script>
+{{ insert_pickadate() }}
 {% endblock %}

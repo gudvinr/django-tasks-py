@@ -1,12 +1,12 @@
+import uuid
 from datetime import date
 
 from django.db import models
 
 from .state import State
-from .uuid_model import UUIDModel
 
 
-class Roadmap(UUIDModel, models.Model):
+class Roadmap(models.Model):
     '''
     Defines filtered list of `Task`
 
@@ -14,6 +14,7 @@ class Roadmap(UUIDModel, models.Model):
     - `title` - Roadmap name
     - `task_set` - QuerySet of tasks
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=256)
 

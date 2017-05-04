@@ -1,3 +1,4 @@
+{% from "_template.html" import insert_pickadate %}
 {% extends "_template.html" %}
 {% block title %} Roadmap: {{ title }} {% endblock %}
 
@@ -10,28 +11,32 @@
 
 {% block content %}
     <div class="row">
-        <form action="#" class="col s12">
+        <form action="{{ url('roadmap', args=[id]) }}" method="POST" class="col s12">
+            {{ csrf_input }}
             <div class="input-field">
-                <input placeholder="Title" id="title" type="text">
+                <input placeholder="Title" id="title" name="title" type="text" required>
                 <label for="title">Title</label>
             </div>
-            <input type="date" class="datepicker">
-            <button class="btn waves-effect waves-light deep-orange accent-2 right" type="submit" name="action">Add task</button>
+            <input type="date" name="estimate" class="datepicker" required>
+            <button id="submit_btn" class="btn waves-effect waves-light deep-orange accent-2 right disabled" type="submit">Add task</button>
         </form>
     </div>
-    {% for t in tasks %}
     <div class="collection">
-        <a href="{{ url('task', args=[id, t.id]) }}" class="collection-item light-blue-text text-darken-4">{{ t.title }}</a>
-    </div>
+    {% for t in tasks %}
+        <a href="{{ url('task', args=[id, t.id]) }}"
+        {% if t.ready %}
+        class="collection-item light-blue-text text-darken-4 green lighten-4"
+        {% elif t.is_failed %}
+        class="collection-item light-blue-text text-darken-4 red lighten-4"
+        {% else %}
+        class="collection-item light-blue-text text-darken-4"
+        {% endif %}
+        >{{ t.title }}</a>
     {% endfor %}
+    </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script>
-    $('.datepicker').pickadate({
-        min: new Date(),
-        formatSubmit: 'dd.mm.yyyy'
-    })
-</script>
+{{ insert_pickadate() }}
 {% endblock %}
