@@ -24,7 +24,7 @@ UUID_PAT = r'[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}'
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^roadmaps/$', views.roadmaps, name='roadmaps'),
-    url(fr'^roadmaps/(?i)(?P<id>{UUID_PAT})/tasks/$', views.roadmap, name='roadmap'),
-    url(fr'^roadmaps/(?i)(?P<roadmap>{UUID_PAT})/tasks/(?P<id>{UUID_PAT})$', views.task, name='task'),
+    url(r'^roadmaps/(?i)(?P<id>{})/tasks/$'.format(UUID_PAT), views.roadmap, name='roadmap'),
+    url(r'^roadmaps/(?i)(?P<roadmap>{0})/tasks/(?P<id>{0})$'.format(UUID_PAT), views.task, name='task'),
     url(r'^$', RedirectView.as_view(url='roadmaps', permanent=False))
 ]
