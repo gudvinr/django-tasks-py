@@ -11,11 +11,16 @@ from .model.forms import RoadmapForm, TaskForm
 
 
 def index(request):
+    ''' Placeholder '''
     return render(request, 'index.html')
 
 
 def roadmaps(request):
+    ''' Returns page with list of roadmaps or creates new one '''
+
     if request.method == 'POST':
+        # Create roadmap
+
         form = RoadmapForm(request.POST)
 
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
@@ -39,12 +44,16 @@ def roadmaps(request):
 
 
 def roadmap(request, id=None):
+    ''' Used to render list of task and add new tasks to roadmap '''
+
     try:
         rm = Roadmap.objects.get(id=id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
     if request.method == 'POST':
+        # Add new task
+
         new_ts = Task(roadmap=rm)
         form = TaskForm(request.POST, instance=new_ts)
 
@@ -59,9 +68,12 @@ def roadmap(request, id=None):
             }
         })
     elif request.method == 'DELETE':
+        # Delete Roadmap
+
         if rm.delete()[0] == 0: return JsonResponse({'ok': False, 'error': "Can't delete"})
         return JsonResponse({'ok': True})
 
+    # Make roadmap template
     tasks = Task.objects.filter(roadmap=rm)
     tasks = [{
         **model_to_dict(ts),
@@ -82,14 +94,13 @@ def roadmap(request, id=None):
 
 
 def rm_stat(request, id=None):
+    ''' Returns json with stat data '''
     try:
         rm = Roadmap.objects.get(id=id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
     tasks = Task.objects.select_related('score').filter(roadmap=rm)
-
-    print([t.score for t in tasks])
 
     return JsonResponse({'stat': [model_to_dict(t.score) for t in tasks]})
 
@@ -103,7 +114,8 @@ def task(request, roadmap=None, id=None):
         return HttpResponseNotFound()
 
     if request.method == 'POST':
-        # Create new task if got one
+        # Edit task
+
         form = TaskForm(request.POST, instance=ts)
 
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
@@ -120,9 +132,12 @@ def task(request, roadmap=None, id=None):
         return JsonResponse({'ok': True, 'result': model_to_dict(ts)})
 
     elif request.method == 'DELETE':
+        # Delete task
+
         if ts.delete()[0] != 1: return JsonResponse({'ok': False, 'error': "Can't delete"})
         return JsonResponse({'ok': True})
 
+    # Returns template if GET is processed
     payload = {
         'id': ts.id,
         'ready': ts.state == State.ready.value,
