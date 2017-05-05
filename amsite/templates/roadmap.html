@@ -6,6 +6,9 @@
 <div class="col s12">
     <a href="{{ url('roadmaps') }}" class="breadcrumb">Roadmaps</a>
     <a href="{{ url('roadmap', args=[id]) }}" class="breadcrumb">{{ title }}</a>
+    <ul class="right">
+        <a href="{{ url('roadmaps') }}" id="delete_btn" class="btn-flat waves-effect white-text">Delete</a>
+    </ul>
 </div>
 {% endblock %}
 
@@ -17,8 +20,15 @@
                 <input placeholder="Title" id="title" name="title" type="text" required>
                 <label for="title">Title</label>
             </div>
-            <input type="date" name="estimate" class="datepicker" required>
-            <button id="submit_btn" class="btn waves-effect waves-light deep-orange accent-2 right disabled" type="submit">Add task</button>
+            <div class="input-field">
+                <input type="date" id="estimate" name="estimate" class="datepicker" required
+                {% if ready %} disabled {% endif %}>
+                <label for="estimate">Estimate</label>
+            </div>
+            <button id="submit_btn" type="submit"
+                class="btn waves-effect waves-light deep-orange accent-2 right disabled">
+                Add task
+            </button>
         </form>
     </div>
     <div class="collection">

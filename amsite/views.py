@@ -1,7 +1,8 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 from django.forms.models import model_to_dict
+from django.core.exceptions import ObjectDoesNotExist
 
 from .model import Roadmap, Task, State
 from .model.forms import RoadmapForm, TaskForm
@@ -36,7 +37,10 @@ def roadmaps(request):
 
 
 def roadmap(request, id=None):
-    rm = Roadmap.objects.get(id=id)
+    try:
+        rm = Roadmap.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
 
     if request.method == 'POST':
         new_ts = Task(roadmap=rm)
@@ -52,6 +56,9 @@ def roadmap(request, id=None):
                 **model_to_dict(new_ts)
             }
         })
+    elif request.method == 'DELETE':
+        if rm.delete()[0] == 0: return JsonResponse({'ok': False, 'error': "Can't delete"})
+        return JsonResponse({'ok': True})
 
     tasks = Task.objects.filter(roadmap=rm)
     tasks = [{
@@ -73,7 +80,10 @@ def roadmap(request, id=None):
 
 
 def task(request, roadmap=None, id=None):
-    ts = Task.objects.get(id=id)
+    try:
+        ts = Task.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=ts)
@@ -84,6 +94,10 @@ def task(request, roadmap=None, id=None):
 
         ts = form.save()
         return JsonResponse({'ok': True, 'result': model_to_dict(ts)})
+
+    elif request.method == 'DELETE':
+        if ts.delete()[0] != 1: return JsonResponse({'ok': False, 'error': "Can't delete"})
+        return JsonResponse({'ok': True})
 
     payload = {
         'id': ts.id,
