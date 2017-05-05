@@ -1,10 +1,12 @@
+import datetime as dt
+
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.core.exceptions import ObjectDoesNotExist
 
-from .model import Roadmap, Task, State
+from .model import Roadmap, Task, State, Scores
 from .model.forms import RoadmapForm, TaskForm
 
 
@@ -79,20 +81,42 @@ def roadmap(request, id=None):
     )
 
 
+def rm_stat(request, id=None):
+    try:
+        rm = Roadmap.objects.get(id=id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
+
+    tasks = Task.objects.select_related('score').filter(roadmap=rm)
+
+    print([t.score for t in tasks])
+
+    return JsonResponse({'stat': [model_to_dict(t.score) for t in tasks]})
+
+
 def task(request, roadmap=None, id=None):
+    ''' Query and save task '''
+
     try:
         ts = Task.objects.get(id=id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
     if request.method == 'POST':
+        # Create new task if got one
         form = TaskForm(request.POST, instance=ts)
 
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
 
-        if form.ready: ts.ready()
+        if form.cleaned_data['ready']:
+            ts.ready()
+            ts = form.save()
 
-        ts = form.save()
+            # Create scores record if task is ready
+            Scores(date=dt.date.today(), task=ts).save()
+        else:
+            ts = form.save()
+
         return JsonResponse({'ok': True, 'result': model_to_dict(ts)})
 
     elif request.method == 'DELETE':
