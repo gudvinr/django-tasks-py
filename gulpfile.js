@@ -15,6 +15,9 @@ gulp.task('copy', function () {
         gulp.src([mdlicons + '/**/*'], { base: mdlicons })
             .pipe(gulp.dest(staticPath + '/fonts/material-iconfont')),
 
+        gulp.src([np + '/chart.js/dist/*.js'])
+            .pipe(gulp.dest(staticPath + '/js')),
+
         gulp.src([np + '/jquery/dist/*.js'])
             .pipe(gulp.dest(staticPath + '/js'))
     ];
