@@ -18,6 +18,9 @@ gulp.task('copy', function () {
         gulp.src([np + '/chart.js/dist/*.js'])
             .pipe(gulp.dest(staticPath + '/js')),
 
+        gulp.src([np + '/moment/moment.js'])
+            .pipe(gulp.dest(staticPath + '/js')),
+
         gulp.src([np + '/jquery/dist/*.js'])
             .pipe(gulp.dest(staticPath + '/js'))
     ];

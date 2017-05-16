@@ -128,19 +128,25 @@ function loadStat(url) {
 
             var weeklyStat = document.getElementById('weekly_stat');
             for (var i = 0; i < resp.weekly.length; i++) {
+                var date = moment(resp.weekly[i].year + "W" + resp.weekly[i].week);
+
                 var elem = document.createElement('tr');
-                elem.innerHTML = '<td>' + resp.weekly[i].week + '</td>';
-                elem.innerHTML += '<td>' + resp.weekly[i].year + '</td>';
-                elem.innerHTML += '<td>' + resp.weekly[i].total + '</td>';
-                elem.innerHTML += '<td>' + resp.weekly[i].done + '</td>';
+                elem.innerHTML =
+                    '<td>' + resp.weekly[i].week + '</td>' +
+                    '<td>' + date.startOf('isoWeek').format("Y-MM-DD") +
+                    '/' + date.endOf('isoWeek').format("Y-MM-DD") + '</td>' +
+                    '<td>' + resp.weekly[i].total + '</td>' +
+                    '<td>' + resp.weekly[i].done + '</td>';
 
                 weeklyStat.appendChild(elem);
             }
 
             var monthlyStat = document.getElementById('monthly_stat');
             for (var i = 0; i < resp.monthly.length; i++) {
+                var date = moment(resp.monthly[i].year + "-" + resp.monthly[i].month, "YYYY-MM");
+
                 var elem = document.createElement('tr');
-                elem.innerHTML = '<td>' + resp.monthly[i].month + '</td>';
+                elem.innerHTML = '<td>' + date.format("MMM Y") + '</td>';
                 elem.innerHTML += '<td>' + resp.monthly[i].scores + '</td>';
 
                 monthlyStat.appendChild(elem);

@@ -12,7 +12,8 @@
   "dependencies": {
     "chart.js": "^2.5.0",
     "material-design-icons-iconfont": "^3.0.3",
-    "materialize-css": "^0.98.1"
+    "materialize-css": "^0.98.1",
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "browser-sync": "^2.18.8",
