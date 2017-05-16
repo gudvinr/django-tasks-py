@@ -23,6 +23,8 @@ class Scores(models.Model):
             max_est=ExpressionWrapper(Max(F('estimate') - F('created')), output_field=DurationField())
         )['max_est']
 
+        if not max_est: max_est = (task.estimate - task.created)
+
         return (
             (dt.date.today() - task.created) / (task.estimate - task.created)
         ) + (

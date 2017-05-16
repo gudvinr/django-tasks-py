@@ -34,7 +34,8 @@ gulp.task('browser-sync', function () {
         ],
         proxy: '127.0.0.1:8000',
         reloadDebounce: 500,
-        reloadDelay: 300
+        reloadDelay: 300,
+        notify: { styles: { top: 'auto', bottom: 0, borderRadius: '5px 0 0 0' } }
     });
 });
 
