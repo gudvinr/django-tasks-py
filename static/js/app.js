@@ -126,7 +126,8 @@ function loadStat(url) {
         if (resp && resp.ok) {
             resp = resp.result;
 
-            var weeklyStat = document.getElementById('weekly_stat');
+            var data = { labels: [], title: ['Created tasks', 'Done tasks'], values: [[], []] };
+            var stat = document.getElementById('weekly_stat');
             for (var i = 0; i < resp.weekly.length; i++) {
                 var date = moment(resp.weekly[i].year + "W" + resp.weekly[i].week);
 
@@ -138,10 +139,16 @@ function loadStat(url) {
                     '<td>' + resp.weekly[i].total + '</td>' +
                     '<td>' + resp.weekly[i].done + '</td>';
 
-                weeklyStat.appendChild(elem);
-            }
+                stat.appendChild(elem);
 
-            var monthlyStat = document.getElementById('monthly_stat');
+                data.labels.push(resp.weekly[i].year + "-" + resp.weekly[i].week);
+                data.values[0].push(resp.weekly[i].total);
+                data.values[0].push(resp.weekly[i].done);
+            }
+            drawCharts('weekly_chart', data);
+
+            data = { labels: [], title: ['Scores'], values: [[]] };
+            stat = document.getElementById('monthly_stat');
             for (var i = 0; i < resp.monthly.length; i++) {
                 var date = moment(resp.monthly[i].year + "-" + resp.monthly[i].month, "YYYY-MM");
 
@@ -149,10 +156,12 @@ function loadStat(url) {
                 elem.innerHTML = '<td>' + date.format("MMM Y") + '</td>';
                 elem.innerHTML += '<td>' + resp.monthly[i].scores + '</td>';
 
-                monthlyStat.appendChild(elem);
-            }
+                stat.appendChild(elem);
 
-            drawCharts(resp);
+                data.labels.push(resp.monthly[i].year + "-" + resp.monthly[i].month);
+                data.values[0].push(resp.monthly[i].scores);
+            }
+            drawCharts('monthly_chart', data);
         }
         else
             handleError(event);
@@ -165,80 +174,36 @@ function loadStat(url) {
     get.send();
 }
 
-function drawCharts(data) {
-    var weeklyChart = new Chart('weekly_chart', {
-        type: 'bar',
+function drawCharts(id, data) {
+    var colors = {
+        bg: ['rgba(3, 169, 244, 0.2)', 'rgba(76, 175, 80, 0.2)'],
+        border: ['#0288d1', '#388e3c']
+    }
+    var datasets = [];
+
+    for (var i = 0; i < data.values.length; i++)
+        datasets.push({
+            label: data.title[i],
+            data: data.values[i],
+            backgroundColor: colors.bg[i],
+            borderColor: colors.border[i],
+            borderWidth: 1
+        });
+
+    var chart = new Chart(id, {
+        type: 'line',
         data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
+            labels: data.labels,
+            datasets: datasets
         },
         options: {
             scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+                yAxes: [{ ticks: { beginAtZero: true } }]
             }
         }
     });
 
-    var monthlyChart = new Chart('monthly_chart', {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
+    chart
 }
 
 // Simple method to parse cookies
