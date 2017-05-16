@@ -143,7 +143,7 @@ function loadStat(url) {
 
                 data.labels.push(resp.weekly[i].year + "-" + resp.weekly[i].week);
                 data.values[0].push(resp.weekly[i].total);
-                data.values[0].push(resp.weekly[i].done);
+                data.values[1].push(resp.weekly[i].done);
             }
             drawCharts('weekly_chart', data);
 
@@ -187,7 +187,6 @@ function drawCharts(id, data) {
             data: data.values[i],
             backgroundColor: colors.bg[i],
             borderColor: colors.border[i],
-            borderWidth: 1
         });
 
     var chart = new Chart(id, {
@@ -195,15 +194,9 @@ function drawCharts(id, data) {
         data: {
             labels: data.labels,
             datasets: datasets
-        },
-        options: {
-            scales: {
-                yAxes: [{ ticks: { beginAtZero: true } }]
-            }
         }
     });
 
-    chart
 }
 
 // Simple method to parse cookies

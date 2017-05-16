@@ -85,6 +85,10 @@
 {{ insert_pickadate() }}
 <script>
     $(document).ready(function(){
+        Chart.defaults.global.defaultFontFamily = 'Roboto, sans-serif';
+        Chart.defaults.global.elements.line.borderWidth = 1;
+        Chart.defaults.scale.ticks.beginAtZero = true;
+
         $('.modal').modal({
             ready: function(modal, trigger) {
                 loadStat(trigger[0].getAttribute("stat-url"));

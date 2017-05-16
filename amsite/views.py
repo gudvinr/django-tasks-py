@@ -102,11 +102,7 @@ def rm_stat(request, id=None):
         return JsonResponse({'ok': False, 'error': "Can't find roadmap with id {}".format(id)})
 
     # FIXME: we shouldn't put hardcoded table names and columns here in extra
-    tasks = Task.objects.select_related('score').filter(roadmap=rm) \
-        .extra({
-            'created_week': "strftime('%%W', created)",
-            'created_year': "strftime('%%Y', created)"
-        }) \
+    tasks = Task.objects.select_related('score').filter(roadmap=rm, state=State.ready.value) \
         .extra(
             select={
                 'completed_week': "strftime('%%W', amsite_scores.date)",
@@ -118,14 +114,15 @@ def rm_stat(request, id=None):
     )
 
     # Group tasks by weeks
-    ts_weekly = tasks \
+    ts_weekly = Task.objects.filter(roadmap=rm) \
+        .extra({
+            'created_week': "strftime('%%W', created)",
+            'created_year': "strftime('%%Y', created)"
+        }) \
         .values('created_year', 'created_week') \
         .annotate(total=Count('id'))
 
-    ts_weekly_done = tasks \
-        .filter(state=State.ready.value) \
-        .values('completed_year', 'completed_week') \
-        .annotate(done=Count('id'))
+    ts_weekly_done = tasks.values('completed_year', 'completed_week').annotate(done=Count('id'))
 
     # Make single list
     for ts_t in ts_weekly:
