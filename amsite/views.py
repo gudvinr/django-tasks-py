@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count, Sum
 
 from .model import Roadmap, Task, State, Scores
 from .model.forms import RoadmapForm, TaskForm
@@ -100,9 +101,54 @@ def rm_stat(request, id=None):
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
-    tasks = Task.objects.select_related('score').filter(roadmap=rm)
+    # FIXME: we shouldn't put hardcoded table names and columns here in extra
+    tasks = Task.objects.select_related('score').filter(roadmap=rm) \
+        .extra({
+            'created_week': "strftime('%%W', created)",
+            'created_year': "strftime('%%Y', created)"
+        }) \
+        .extra(
+            select={
+                'completed_week': "strftime('%%W', amsite_scores.date)",
+                'completed_year': "strftime('%%Y', amsite_scores.date)",
+                'completed_month': "strftime('%%m', amsite_scores.date)"
+            },
+            where=('amsite_task.id=amsite_scores.task_id',),
+            tables=('amsite_scores',)
+    )
 
-    return JsonResponse({'stat': [model_to_dict(t.score) for t in tasks]})
+    # Group tasks by weeks
+    ts_weekly = tasks \
+        .values('created_year', 'created_week') \
+        .annotate(total=Count('id'))
+
+    ts_weekly_done = tasks \
+        .filter(state=State.ready.value) \
+        .values('completed_year', 'completed_week') \
+        .annotate(done=Count('id'))
+
+    # Make single list
+    for ts_t in ts_weekly:
+        ts_t['done'] = sum([
+            t['done'] for t in ts_weekly_done
+            if t['completed_week'] == ts_t['created_week'] and t['completed_year'] == ts_t['created_year']
+        ])
+
+        ts_t['week'] = ts_t.pop('created_week')
+        ts_t['year'] = ts_t.pop('created_year')
+
+    # Group tasks by month with points
+    ts_monthly = tasks.values('completed_year', 'completed_month').annotate(scores=Sum('score__points'))
+
+    for t in ts_monthly:
+        t['month'] = t.pop('completed_month')
+        t['year'] = t.pop('completed_year')
+
+    return JsonResponse({
+        'stat': [model_to_dict(t.score) for t in tasks],
+        'weekly': list(ts_weekly),
+        'monthly': list(ts_monthly),
+    })
 
 
 def task(request, roadmap=None, id=None):
