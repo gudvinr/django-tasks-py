@@ -51,9 +51,10 @@
 {% macro insert_pickadate() -%}
 <script>
     $('.datepicker').pickadate({
-        min: new Date(),
         formatSubmit: 'yyyy-mm-dd',
         hiddenName: true,
+        onOpen: function() { this.set('min', new Date()); },
+        onClose: function() { this.set('min', false); },
         onSet: function( arg ) {
             if ( 'select' in arg || 'clear' in arg ) {
                 checkInput();
