@@ -1,0 +1,24 @@
+header .nav-wrapper>div,
+header .nav-wrapper>a {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.container {
+    padding-top: 2rem;
+}
+
+.switch {
+    display: inline-block;
+}
+
+.modal-content>table:not(:last-child) {
+    margin-bottom: 4rem;
+}
+
+#modal_stat.modal {
+    top: 5%!important;
+    height: 90%;
+    max-height: 90%;
+    width: 75%;
+}

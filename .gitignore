@@ -5,6 +5,10 @@
 node_modules/
 static/
 
+!static/css/main.css
+!static/js/app.js
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
