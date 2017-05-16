@@ -44,8 +44,28 @@
     </div>
     <div id="modal_stat" class="modal modal-fixed-footer">
         <div class="modal-content">
-            <h4>Roadmap stats</h4>
-            <p>A bunch of text</p>
+            <h4>Roadmap weekly stats</h4>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Dates</th>
+                        <th>New</th>
+                        <th>Ready</th>
+                    </tr>
+                </thead>
+                <tbody id="weekly_stat"></tbody>
+            </table>
+            <h4>Roadmap monthly stats</h4>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Scores</th>
+                    </tr>
+                </thead>
+                <tbody id="monthly_stat"></tbody>
+            </table>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
@@ -62,5 +82,13 @@
 {% endif %}
 
 {{ insert_pickadate() }}
-<script> $(document).ready(function(){$('.modal').modal();}); </script>
+<script>
+    $(document).ready(function(){
+        $('.modal').modal({
+            ready: function(modal, trigger) {
+                loadStat(trigger[0].getAttribute("stat-url"));
+            }
+        });
+    });
+</script>
 {% endblock %}

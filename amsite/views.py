@@ -99,7 +99,7 @@ def rm_stat(request, id=None):
     try:
         rm = Roadmap.objects.get(id=id)
     except ObjectDoesNotExist:
-        return HttpResponseNotFound()
+        return JsonResponse({'ok': False, 'error': "Can't find roadmap with id {}".format(id)})
 
     # FIXME: we shouldn't put hardcoded table names and columns here in extra
     tasks = Task.objects.select_related('score').filter(roadmap=rm) \
@@ -145,9 +145,12 @@ def rm_stat(request, id=None):
         t['year'] = t.pop('completed_year')
 
     return JsonResponse({
-        'stat': [model_to_dict(t.score) for t in tasks],
-        'weekly': list(ts_weekly),
-        'monthly': list(ts_monthly),
+        'ok': True,
+        'result': {
+            # 'stat': [model_to_dict(t.score) for t in tasks],
+            'weekly': list(ts_weekly),
+            'monthly': list(ts_monthly)
+        }
     })
 
 
