@@ -22,12 +22,12 @@ from . import views
 UUID_PAT = r'[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}'
 
 urlpatterns = [
-    url(r'^roadmaps/?$', views.roadmaps, name='roadmaps'),
+    url(r'^roadmaps/?$', views.RoadmapsView.as_view(), name='roadmaps'),
 
-    url(r'^roadmaps/(?i)(?P<id>{})/tasks/?$'.format(UUID_PAT), views.roadmap, name='roadmap'),
-    url(r'^roadmaps/(?i)(?P<id>{})/stat/?$'.format(UUID_PAT), views.rm_stat, name='rm_stat'),
+    url(r'^roadmaps/(?i)(?P<id>{})/tasks/?$'.format(UUID_PAT), views.RoadmapView.as_view(), name='roadmap'),
+    url(r'^roadmaps/(?i)(?P<id>{})/stat/?$'.format(UUID_PAT), views.RoadmapStatView.as_view(), name='rm_stat'),
 
-    url(r'^roadmaps/(?i)(?P<roadmap>{0})/tasks/(?P<id>{0})$'.format(UUID_PAT), views.task, name='task'),
+    url(r'^roadmaps/(?i)(?P<roadmap>{0})/tasks/(?P<id>{0})$'.format(UUID_PAT), views.TaskView.as_view(), name='task'),
 
     url(r'^admin/?', admin.site.urls),
 
