@@ -11,7 +11,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from ._utils import get_dataset, exc_parse
 
-from amsite.model import Task, Roadmap, State, Scores
+from amsite.models import Task, Roadmap, State, Scores
 
 
 class Command(BaseCommand):

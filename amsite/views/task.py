@@ -1,15 +1,16 @@
 import datetime as dt
 
 from django.http import JsonResponse, HttpResponseNotFound
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 
-from amsite.model import Task, Scores, State, forms
+from amsite.models import Task, Scores, State, forms
 
 
-class TaskView(View):
+class TaskView(LoginRequiredMixin, View):
 
     def post(self, request, roadmap=None, id=None):
         ''' Edit task '''

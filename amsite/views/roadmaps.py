@@ -1,13 +1,14 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
 
-from amsite.model import Roadmap, forms
+from amsite.models import Roadmap, forms
 
 
-class RoadmapsView(View):
+class RoadmapsView(LoginRequiredMixin, View):
 
     def post(self, request):
         ''' Create roadmap '''

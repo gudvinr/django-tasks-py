@@ -1,4 +1,5 @@
 from django.http import JsonResponse, HttpResponseNotFound
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 from django.views import View
@@ -6,10 +7,10 @@ from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
 
-from amsite.model import Roadmap, Task, State, forms
+from amsite.models import Roadmap, Task, State, forms
 
 
-class RoadmapView(View):
+class RoadmapView(LoginRequiredMixin, View):
 
     def post(self, request, id=None):
         '''Add new task'''
@@ -70,7 +71,7 @@ class RoadmapView(View):
         return render(request, 'roadmap.html', payload)
 
 
-class RoadmapStatView(View):
+class RoadmapStatView(LoginRequiredMixin, View):
 
     def get(self, request, id=None):
         ''' Returns json with stat data '''
