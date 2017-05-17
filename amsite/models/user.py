@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -6,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser):
     # FIXME: we should not redefine fields and must inherit AbstractBaseUser and PermissionsMixin instead
     username_validator = None
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     username = models.EmailField(
         _('email address'),
