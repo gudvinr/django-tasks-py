@@ -20,6 +20,8 @@ class ProfileView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Can't find user: {}".format(id)})
 
+        if user.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
+
         form = forms.UserForm(request.POST, instance=user)
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
 

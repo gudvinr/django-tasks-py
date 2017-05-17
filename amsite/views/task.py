@@ -20,6 +20,8 @@ class TaskView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Can't find task {}".format(id)})
 
+        if ts.roadmap.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
+
         form = forms.TaskForm(request.POST, instance=ts)
 
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
@@ -43,6 +45,8 @@ class TaskView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Can't find task {}".format(id)})
 
+        if ts.roadmap.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
+
         if ts.delete()[0] != 1: return JsonResponse({'ok': False, 'error': "Can't delete"})
         return JsonResponse({'ok': True})
 
@@ -53,6 +57,8 @@ class TaskView(LoginRequiredMixin, View):
             ts = Task.objects.get(id=id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
+
+        if ts.roadmap.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
 
         # Returns template if GET is processed
         payload = {

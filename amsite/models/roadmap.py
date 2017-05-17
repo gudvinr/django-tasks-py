@@ -4,6 +4,7 @@ from datetime import date
 from django.db import models
 
 from .state import State
+from .user import User
 
 
 class Roadmap(models.Model):
@@ -17,6 +18,8 @@ class Roadmap(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=256)
+
+    author = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, blank=False)
 
     @property
     def today(self) -> list:

@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponseNotFound, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
@@ -19,6 +19,8 @@ class RoadmapView(LoginRequiredMixin, View):
             rm = Roadmap.objects.get(id=id)
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Roadmap {} not found".format(id)})
+
+        if rm.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
 
         new_ts = Task(roadmap=rm)
         form = forms.TaskForm(request.POST, instance=new_ts)
@@ -42,6 +44,8 @@ class RoadmapView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Roadmap {} not found".format(id)})
 
+        if rm.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
+
         if rm.delete()[0] == 0: return JsonResponse({'ok': False, 'error': "Can't delete"})
         return JsonResponse({'ok': True})
 
@@ -52,6 +56,8 @@ class RoadmapView(LoginRequiredMixin, View):
             rm = Roadmap.objects.get(id=id)
         except ObjectDoesNotExist:
             return HttpResponseNotFound()
+
+        if rm.author.id != request.user.id: return HttpResponseForbidden()
 
         # Make roadmap template
         tasks = Task.objects.filter(roadmap=rm)
@@ -79,6 +85,8 @@ class RoadmapStatView(LoginRequiredMixin, View):
             rm = Roadmap.objects.get(id=id)
         except ObjectDoesNotExist:
             return JsonResponse({'ok': False, 'error': "Can't find roadmap with id {}".format(id)})
+
+        if rm.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
 
         # FIXME: we shouldn't put hardcoded table names and columns here in extra
         tasks = Task.objects.select_related('score').filter(roadmap=rm, state=State.ready.value) \

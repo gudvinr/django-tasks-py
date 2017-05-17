@@ -11,22 +11,24 @@ from django.core.management.base import BaseCommand, CommandError
 
 from ._utils import get_dataset, exc_parse
 
-from amsite.models import Task, Roadmap, State, Scores
+from amsite.models import Task, Roadmap, State, Scores, User
 
 
 class Command(BaseCommand):
     help = 'Fills roadmap with given name with values from given yaml file'
 
     def add_arguments(self, parser):
+        parser.add_argument('user')
         parser.add_argument('dataset')
         parser.add_argument('--roadmap', help='Roadmap name. Default is filename')
 
     def handle(self, *args, **options):
+        username = options['user']
         filename = options['dataset']
         title = options['roadmap'] if options.get('roadmap') else splitext(basename(filename))[0]
 
         try:
-            roadmap = Roadmap(title=title)
+            roadmap = Roadmap(title=title, author=User.objects.get(username=username))
             roadmap.save()
 
             # parse dataset and fill roadmap with values

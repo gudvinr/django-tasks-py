@@ -17,7 +17,10 @@ class RoadmapsView(LoginRequiredMixin, View):
 
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
 
-        new_rm = form.save()
+        new_rm = form.save(commit=False)
+        new_rm.author = request.user
+        new_rm.save()
+
         return JsonResponse({
             'ok': True,
             'result': {
@@ -30,7 +33,7 @@ class RoadmapsView(LoginRequiredMixin, View):
         ''' Returns page with list of roadmaps '''
 
         payload = {
-            'roadmaps': Roadmap.objects.all().values()
+            'roadmaps': Roadmap.objects.filter(author=request.user).values()
         }
 
         return render(request, 'roadmaps.html', payload)
