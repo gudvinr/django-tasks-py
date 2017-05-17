@@ -1,4 +1,4 @@
-var submitForm = document.querySelector('form');        // Form used to submit new task and new roadmap
+var submitForm = document.querySelector('form');        // Form used to submit data
 var switchInput = submitForm.querySelector('.switch');  // Switch element of task view used to change task state
 var delBtn = document.getElementById('delete_btn');     // Button to delete roadmap/task
 
@@ -13,7 +13,7 @@ function checkInput() {
     var inputs = submitForm.querySelectorAll('input');
     for (var i = 0; i < inputs.length; i++) if (!inputs[i].checkValidity()) return;
 
-    if (!$('.datepicker').pickadate('get', 'select')) return;
+    if (document.querySelector('.datepicker') && !$('.datepicker').pickadate('get', 'select')) return;
 
     if (btn.classList.contains('disabled')) btn.classList.remove('disabled');
 }
