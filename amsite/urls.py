@@ -29,6 +29,8 @@ urlpatterns = [
 
     url(r'^roadmaps/(?i)(?P<roadmap>{0})/tasks/(?P<id>{0})$'.format(UUID_PAT), views.TaskView.as_view(), name='task'),
 
+    url(r'^profile/(?i)(?P<id>{})/?'.format(UUID_PAT), views.ProfileView.as_view(), name='profile'),
+    url(r'^profile/?', views.ProfileView.as_view(), name='profile'),
     url(r'^auth/?', views.LoginView.as_view(), name='auth'),
     url(r'^logout/?', views.logout_view, name='logout'),
 

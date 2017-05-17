@@ -1,0 +1,65 @@
+{% extends "_template.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <form action="{{ url('profile', args=[id]) }}" method="POST" class="col s12">
+            {{ csrf_input }}
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" name="email" type="email" disabled value="{{ email }}">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div id="auth-name" class="col s12">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="first_name" name="first_name" type="text" class="validate"
+                            value="{{ first_name }}"
+                            {% if not self_profile %}disabled{% endif %}>
+                        <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" name="last_name" type="text" class="validate"
+                            value="{{ last_name }}"
+                            {% if not self_profile %}disabled{% endif %}>
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s3">
+                        <input id="age" name="age" type="number" class="validate" min="12" max="228"
+                            value="{{ age }}"
+                            {% if not self_profile %}disabled{% endif %}>
+                        <label for="age">Age</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="region" name="region" type="text" class="validate"
+                            value="{{ region }}"
+                            {% if not self_profile %}disabled{% endif %}>
+                        <label for="region">Region</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="phone" name="phone" type="text" class="validate"
+                            value="{{ phone }}"
+                            {% if not self_profile %}disabled{% endif %}>
+                        <label for="phone">Phone</label>
+                    </div>
+                </div>
+            </div>
+            {% if self_profile %}
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" name="password" type="password" class="validate" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="password_confirm" name="password_confirm" type="password" class="validate" required>
+                    <label for="password_confirm">Confirm password</label>
+                </div>
+            </div>
+            <button id="submit_btn" class="btn waves-effect waves-light deep-orange accent-2 right disabled" type="submit">Edit</button>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
