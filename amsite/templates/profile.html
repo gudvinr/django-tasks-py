@@ -11,7 +11,7 @@
                     <label for="email">Email</label>
                 </div>
             </div>
-            <div id="auth-name" class="col s12">
+            <div class="auth-name col s12">
                 <div class="row">
                     <div class="input-field col s6">
                         <input id="first_name" name="first_name" type="text" class="validate"
@@ -28,8 +28,8 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s3">
-                        <input id="age" name="age" type="number" class="validate" min="12" max="228"
-                            value="{{ age }}"
+                        <input id="age" name="age" type="number" min="12" max="228"
+                            {% if age %}value="{{ age }}"{% endif %}
                             {% if not self_profile %}disabled{% endif %}>
                         <label for="age">Age</label>
                     </div>
@@ -50,11 +50,11 @@
             {% if self_profile %}
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="password" name="password" type="password" class="validate" required>
+                    <input id="password" name="password" type="password" class="validate">
                     <label for="password">Password</label>
                 </div>
                 <div class="input-field col s12">
-                    <input id="password_confirm" name="password_confirm" type="password" class="validate" required>
+                    <input id="password_confirm" name="password_confirm" type="password" class="validate">
                     <label for="password_confirm">Confirm password</label>
                 </div>
             </div>

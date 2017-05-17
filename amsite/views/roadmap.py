@@ -7,7 +7,7 @@ from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
 
-from amsite.models import Roadmap, Task, State, forms
+from ..models import Roadmap, Task, State, forms
 
 
 class RoadmapView(LoginRequiredMixin, View):

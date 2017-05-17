@@ -7,7 +7,7 @@ from django.views import View
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 
-from amsite.models import Task, Scores, State, forms
+from ..models import Task, Scores, State, forms
 
 
 class TaskView(LoginRequiredMixin, View):

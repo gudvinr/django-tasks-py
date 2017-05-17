@@ -1,2 +1,5 @@
-from .roadmap import RoadmapForm  # noqa
-from .task import TaskForm  # noqa
+# flake8: noqa
+
+from .roadmap import RoadmapForm
+from .task import TaskForm
+from .user import UserForm

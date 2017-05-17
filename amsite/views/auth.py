@@ -5,7 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from amsite.models import User
+from ..models import User, forms
+
+
+def append_to_dict(form, args, field):
+    if form.cleaned_data[field]: args[field] = form.cleaned_data[field]
 
 
 class LoginView(View):
@@ -13,10 +17,13 @@ class LoginView(View):
     def post(self, request):
         ''' Login and register '''
 
-        action = request.POST.get('action')
+        form = forms.UserForm(request.POST)
+        if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
 
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        action = form.cleaned_data['action']
+
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
 
         if not (email and password): return JsonResponse({'ok': False, 'error': 'Empty credentials'})
 
@@ -26,11 +33,11 @@ class LoginView(View):
         elif action == 'register':
             args = {}
 
-            if request.POST.get('first_name'): args['first_name'] = request.POST.get('first_name')
-            if request.POST.get('last_name'): args['last_name'] = request.POST.get('last_name')
-            if request.POST.get('age'): args['age'] = request.POST.get('age')
-            if request.POST.get('region'): args['region'] = request.POST.get('region')
-            if request.POST.get('phone'): args['phone'] = request.POST.get('phone')
+            append_to_dict(form, args, 'first_name')
+            append_to_dict(form, args, 'last_name')
+            append_to_dict(form, args, 'age')
+            append_to_dict(form, args, 'region')
+            append_to_dict(form, args, 'phone')
 
             user = User.objects.create_user(username=email, password=password, **args)
         else:

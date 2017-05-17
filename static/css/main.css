@@ -23,6 +23,6 @@ header .nav-wrapper>a {
     width: 75%;
 }
 
-#auth-name {
-    padding: 0;
+.auth-name {
+    padding: 0!important;
 }

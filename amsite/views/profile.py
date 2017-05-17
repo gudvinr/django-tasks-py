@@ -5,14 +5,36 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from amsite.models import User
+from ..models import User, forms
 
 
 class ProfileView(LoginRequiredMixin, View):
 
     def post(self, request, id=None):
         ''' Edit user profile or change password '''
-        pass
+
+        if not id: return JsonResponse({'ok': False, 'error': "No such user: {}".format(id)})
+
+        try:
+            user = User.objects.get(id=id)
+        except ObjectDoesNotExist:
+            return JsonResponse({'ok': False, 'error': "Can't find user: {}".format(id)})
+
+        form = forms.UserForm(request.POST, instance=user)
+        if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
+
+        if form.cleaned_data['email'] and form.cleaned_data['email'] != user.username:
+            return JsonResponse({'ok': False, 'error': "Email can't be changed"})
+
+        if form.cleaned_data['password'] and form.cleaned_data['password'] != form.cleaned_data['password_confirm']:
+            return JsonResponse({'ok': False, 'error': "Passwords does not match"})
+
+        user = form.save(commit=False)
+
+        if form.cleaned_data['password']: user.set_password(form.cleaned_data['password'])
+        user.save()
+
+        return JsonResponse({'ok': True})
 
     def get(self, request, id=None):
         ''' Returns profile page with filled fields '''
