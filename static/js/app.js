@@ -65,6 +65,12 @@ function sendForm(event) {
     var btn = submitForm.querySelector('#submit_btn');
     if (!btn.classList.contains('disabled')) btn.classList.add('disabled');
 
+    var fd = new FormData(submitForm);
+
+    // Append action to formdata if auth form
+    var authHidden = submitForm.querySelector('#auth-name');
+    if (authHidden) fd.append('action', (authHidden.classList.contains('hide') ? 'login' : 'register'));
+
     var post = new XMLHttpRequest();
 
     post.addEventListener('load', function (event) {
@@ -72,6 +78,12 @@ function sendForm(event) {
 
         if (resp && resp.ok) {
             resp = resp.result;
+
+            if (authHidden) {
+                var href = getParameterByName('next');
+                window.location = (href) ? href : ((resp) ? resp : '/');
+                return;
+            }
 
             var list = document.querySelector('.collection');
 
@@ -101,7 +113,7 @@ function sendForm(event) {
     post.addEventListener('abort', function (event) { handleError(event, btn) });
 
     post.open('POST', submitForm.action)
-    post.send(new FormData(submitForm));
+    post.send(fd);
 }
 
 // Print errors
@@ -109,7 +121,12 @@ function handleError(event, btn) {
     var resp;
     if (event && event.target) resp = JSON.parse(event.target.response);
 
-    console.log(resp);
+    var authHidden = submitForm.querySelector('#auth-name');
+    if (authHidden)
+        if (authHidden.classList.contains('hide')) {
+            authHidden.classList.remove('hide');
+            btn.innerText = 'Sign up';
+        }
 
     var err = '<div>Error: ' + ((resp && resp.error) ? resp.error + '</div>' : 'undefined</div>');
 
@@ -204,4 +221,15 @@ function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+// Helper for parsing query strings
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
