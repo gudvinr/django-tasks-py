@@ -28,9 +28,11 @@ class LoginView(View):
 
             if request.POST.get('first_name'): args['first_name'] = request.POST.get('first_name')
             if request.POST.get('last_name'): args['last_name'] = request.POST.get('last_name')
+            if request.POST.get('age'): args['age'] = request.POST.get('age')
+            if request.POST.get('region'): args['region'] = request.POST.get('region')
+            if request.POST.get('phone'): args['phone'] = request.POST.get('phone')
 
             user = User.objects.create_user(username=email, password=password, **args)
-
         else:
             return JsonResponse({'ok': False, 'error': 'Wrong action'})
 

@@ -14,3 +14,7 @@ class User(AbstractUser):
             'unique': _("A user with that email already exists.")
         }
     )
+
+    age = models.PositiveIntegerField(_('age'), null=True, blank=True)
+    phone = models.CharField(_('phone number'), max_length=15, blank=True)
+    region = models.CharField(_('region'), max_length=30, blank=True)
