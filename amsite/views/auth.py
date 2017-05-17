@@ -13,8 +13,6 @@ class LoginView(View):
     def post(self, request):
         ''' Login and register '''
 
-        print(request.POST)
-
         action = request.POST.get('action')
 
         email = request.POST.get('email')
@@ -50,6 +48,5 @@ class LoginView(View):
 
 @login_required
 def logout_view(request):
-    if request.method == 'POST': logout(request)
-
+    logout(request)
     return redirect('/')

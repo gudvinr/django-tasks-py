@@ -22,3 +22,7 @@ header .nav-wrapper>a {
     max-height: 90%;
     width: 75%;
 }
+
+#auth-name {
+    padding: 0;
+}
