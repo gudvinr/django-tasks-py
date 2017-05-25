@@ -51,7 +51,7 @@ class TaskView(LoginRequiredMixin, View):
 
         if ts.roadmap.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
 
-        if ts.delete()[0] != 1: return JsonResponse({'ok': False, 'error': "Can't delete"})
+        if ts.delete()[0] == 0: return JsonResponse({'ok': False, 'error': "Can't delete"})
         return JsonResponse({'ok': True})
 
     def get(self, request, roadmap=None, id=None):
