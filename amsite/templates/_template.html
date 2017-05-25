@@ -72,3 +72,7 @@
     })
 </script>
 {%- endmacro %}
+
+{% macro ellipsize(data, size=64) -%}
+{{ data if len(data) < size else data[:size-1].rstrip() + '…' }}
+{%- endmacro %}

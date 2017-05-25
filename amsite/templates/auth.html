@@ -47,3 +47,11 @@
     </form>
   </div>
 {% endblock %}
+
+{% block head %}
+{{ super() }}
+<style>
+.nav-wrapper>a.brand-logo {left: 50%; transform: translateX(-50%);}
+.nav-wrapper>ul.right {display: none;}
+</style>
+{% endblock %}

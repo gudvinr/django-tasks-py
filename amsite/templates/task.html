@@ -1,12 +1,12 @@
-{% from "_template.html" import insert_pickadate %}
+{% from "_template.html" import insert_pickadate, ellipsize %}
 {% extends "_template.html" %}
-{% block title %} Task: {{ title if len(title) < 64 else title[:63].rstrip() + '…' }} {% endblock %}
+{% block title %} Task: {{ ellipsize(title) }} {% endblock %}
 
 {% block navbar %}
 <div class="col s12">
     <a href="{{ url('roadmaps') }}" class="breadcrumb">Roadmaps</a>
-    <a href="{{ url('roadmap', args=[roadmap.id]) }}" class="breadcrumb">{{ roadmap.title }}</a>
-    <a href="{{ url('task', args=[roadmap.id, id]) }}" class="breadcrumb">{{ title }}</a>
+    <a href="{{ url('roadmap', args=[roadmap.id]) }}" class="breadcrumb">{{ ellipsize(roadmap.title) }}</a>
+    <a href="{{ url('task', args=[roadmap.id, id]) }}" class="breadcrumb">{{ ellipsize(title) }}</a>
     <ul class="right">
         <a href="{{ url('roadmap', args=[roadmap.id]) }}" id="delete_btn" class="btn-flat waves-effect white-text">Delete</a>
     </ul>

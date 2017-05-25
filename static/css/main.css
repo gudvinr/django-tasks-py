@@ -26,3 +26,9 @@ header .nav-wrapper>a {
 .auth-name {
     padding: 0!important;
 }
+
+.container > .collection > .collection-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
