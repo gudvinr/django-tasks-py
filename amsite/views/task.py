@@ -1,11 +1,11 @@
 import datetime as dt
 
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.forms.models import model_to_dict
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from ..models import Task, Scores, State, forms
 
@@ -13,7 +13,9 @@ from ..models import Task, Scores, State, forms
 class TaskView(LoginRequiredMixin, View):
 
     def post(self, request, roadmap=None, id=None):
-        ''' Edit task '''
+        '''
+        Edit task
+        '''
 
         try:
             ts = Task.objects.get(id=id)
@@ -38,7 +40,9 @@ class TaskView(LoginRequiredMixin, View):
         return JsonResponse({'ok': True, 'result': model_to_dict(ts)})
 
     def delete(self, request, roadmap=None, id=None):
-        ''' Delete task '''
+        '''
+        Delete task
+        '''
 
         try:
             ts = Task.objects.get(id=id)
@@ -51,12 +55,11 @@ class TaskView(LoginRequiredMixin, View):
         return JsonResponse({'ok': True})
 
     def get(self, request, roadmap=None, id=None):
-        ''' Query and save task '''
+        '''
+        Query and save task
+        '''
 
-        try:
-            ts = Task.objects.get(id=id)
-        except ObjectDoesNotExist:
-            return HttpResponseNotFound()
+        ts = get_object_or_404(Task, id=id)
 
         if ts.roadmap.author.id != request.user.id: return JsonResponse({'ok': False, 'error': "Access denied"})
 

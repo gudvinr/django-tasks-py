@@ -1,10 +1,10 @@
-from django.http import JsonResponse, HttpResponseNotFound, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum
 from django.views import View
 from django.forms.models import model_to_dict
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from ..models import Roadmap, Task, State, forms
@@ -13,7 +13,9 @@ from ..models import Roadmap, Task, State, forms
 class RoadmapView(LoginRequiredMixin, View):
 
     def post(self, request, id=None):
-        '''Add new task'''
+        '''
+        Add new task
+        '''
 
         try:
             rm = Roadmap.objects.get(id=id)
@@ -37,7 +39,9 @@ class RoadmapView(LoginRequiredMixin, View):
         })
 
     def delete(self, request, id=None):
-        '''Delete Roadmap'''
+        '''
+        Delete Roadmap
+        '''
 
         try:
             rm = Roadmap.objects.get(id=id)
@@ -50,12 +54,11 @@ class RoadmapView(LoginRequiredMixin, View):
         return JsonResponse({'ok': True})
 
     def get(self, request, id=None):
-        ''' Used to render list of task '''
+        '''
+        Used to render list of task
+        '''
 
-        try:
-            rm = Roadmap.objects.get(id=id)
-        except ObjectDoesNotExist:
-            return HttpResponseNotFound()
+        rm = get_object_or_404(Roadmap, id=id)
 
         if rm.author.id != request.user.id: return HttpResponseForbidden()
 
@@ -80,7 +83,10 @@ class RoadmapView(LoginRequiredMixin, View):
 class RoadmapStatView(LoginRequiredMixin, View):
 
     def get(self, request, id=None):
-        ''' Returns json with stat data '''
+        '''
+        Returns json with stat data
+        '''
+
         try:
             rm = Roadmap.objects.get(id=id)
         except ObjectDoesNotExist:

@@ -2,6 +2,7 @@ from django.http import JsonResponse, HttpResponseNotFound
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -11,9 +12,9 @@ from ..models import User, forms
 class ProfileView(LoginRequiredMixin, View):
 
     def post(self, request, id=None):
-        ''' Edit user profile or change password '''
-
-        if not id: return JsonResponse({'ok': False, 'error': "No such user: {}".format(id)})
+        '''
+        Edit user profile or change password
+        '''
 
         try:
             user = User.objects.get(id=id)
@@ -36,10 +37,14 @@ class ProfileView(LoginRequiredMixin, View):
         if form.cleaned_data['password']: user.set_password(form.cleaned_data['password'])
         user.save()
 
+        login(request, user)
+
         return JsonResponse({'ok': True})
 
     def get(self, request, id=None):
-        ''' Returns profile page with filled fields '''
+        '''
+        Returns profile page with filled fields
+        '''
 
         if not id: return redirect(reverse('profile', args=[request.user.id]), permanent=False)
 

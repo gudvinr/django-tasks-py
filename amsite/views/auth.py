@@ -15,7 +15,9 @@ def append_to_dict(form, args, field):
 class LoginView(View):
 
     def post(self, request):
-        ''' Login and register '''
+        '''
+        Login and register
+        '''
 
         form = forms.UserForm(request.POST)
         if not form.is_valid(): return JsonResponse({'ok': False, 'error': str(form.errors)})
@@ -50,7 +52,9 @@ class LoginView(View):
         return JsonResponse({'ok': True, 'result': reverse('roadmaps')})
 
     def get(self, request):
-        ''' Render auth view '''
+        '''
+        Render auth view
+        '''
 
         return render(request, 'auth.html')
 

@@ -11,7 +11,9 @@ from ..models import Roadmap, forms
 class RoadmapsView(LoginRequiredMixin, View):
 
     def post(self, request):
-        ''' Create roadmap '''
+        '''
+        Create roadmap
+        '''
 
         form = forms.RoadmapForm(request.POST)
 
@@ -30,7 +32,9 @@ class RoadmapsView(LoginRequiredMixin, View):
         })
 
     def get(self, request):
-        ''' Returns page with list of roadmaps '''
+        '''
+        Returns page with list of roadmaps
+        '''
 
         payload = {
             'roadmaps': Roadmap.objects.filter(author=request.user).values()
