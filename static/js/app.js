@@ -145,6 +145,7 @@ function loadStat(url) {
 
             var data = { labels: [], title: ['Created tasks', 'Done tasks'], values: [[], []] };
             var stat = document.getElementById('weekly_stat');
+            stat.innerHTML = "";
             for (var i = 0; i < resp.weekly.length; i++) {
                 var date = moment(resp.weekly[i].year + "W" + resp.weekly[i].week);
 
@@ -166,6 +167,7 @@ function loadStat(url) {
 
             data = { labels: [], title: ['Scores'], values: [[]] };
             stat = document.getElementById('monthly_stat');
+            stat.innerHTML = "";
             for (var i = 0; i < resp.monthly.length; i++) {
                 var date = moment(resp.monthly[i].year + "-" + resp.monthly[i].month, "YYYY-MM");
 
