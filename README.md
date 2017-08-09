@@ -1,3 +1,3 @@
-# atom_mail_python
+# django-tasks-py
 
-[![Build Status](https://travis-ci.org/gudvinr/atom_mail_python.svg?branch=master)](https://travis-ci.org/gudvinr/atom_mail_python)
+[![Build Status](https://travis-ci.org/gudvinr/django-tasks-py.svg?branch=master)](https://travis-ci.org/gudvinr/django-tasks-py)
